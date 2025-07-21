@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Malla Curricular - Medicina Veterinaria</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Malla de Nani - Medicina Veterinaria</h1>
+            <div class="controls">
+                <div class="progress-container">
+                    <label>Progreso Total:</label>
+                    <div class="progress-bar">
+                        <div class="progress" id="totalProgress"></div>
+                    </div>
+                    <span id="progressPercentage">0%</span>
+                </div>
+            </div>
+        </header>
+        <main id="mallaContainer">
+            <!-- Los semestres se generarán dinámicamente aquí -->
+        </main>
+        <footer>
+            <p>© 2024 Malla de Nani - Medicina Veterinaria. Todos los derechos reservados.</p>
+        </footer>
+    </div>
+    <div id="toast" class="toast"></div>
+    <div id="congratsModal" class="modal">
+        <div class="modal-content">
+            <button class="close-button">&times;</button>
+            <div class="modal-body"></div>
+        </div>
+    </div>
+    <script src="data.js"></script>
+    <script src="script.js"></script>
+</body>
+</html> 
