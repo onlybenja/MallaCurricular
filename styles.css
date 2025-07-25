@@ -146,6 +146,21 @@ h1 {
     align-items: center;
     font-size: 0.8rem;
     border: 2px solid transparent;
+    transition: box-shadow 0.22s, transform 0.18s;
+}
+.course.animated {
+    animation: popCourse 0.32s cubic-bezier(.4,1.6,.4,1);
+}
+@keyframes popCourse {
+    0% { transform: scale(1); box-shadow: 0 0 0 #0000; }
+    40% { transform: scale(1.12); box-shadow: 0 4px 16px #0002; }
+    100% { transform: scale(1); box-shadow: 0 0 0 #0000; }
+}
+
+.course:hover {
+    box-shadow: 0 4px 18px #d81b6040;
+    transform: scale(1.04);
+    z-index: 2;
 }
 
 .course.disabled {
@@ -201,24 +216,24 @@ footer p {
 
 .toast {
     position: fixed;
-    bottom: 1rem;
+    bottom: 24px;
     left: 50%;
     transform: translateX(-50%);
-    background-color: #333;
-    color: white;
-    padding: 0.75rem 1.5rem;
-    border-radius: var(--border-radius);
-    display: none;
-    z-index: 1000;
-    font-size: 0.9rem;
-    max-width: 90%;
-    text-align: center;
+    z-index: 10000;
+    background: rgba(34,34,34,0.85);
+    color: #fff;
+    padding: 10px 22px;
+    border-radius: 8px;
+    font-size: 1em;
     font-weight: 400;
+    box-shadow: 0 2px 8px #0002;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s;
 }
-
 .toast.show {
-    display: block;
-    animation: fadeIn 0.3s;
+    opacity: 1;
+    pointer-events: auto;
 }
 
 .toast h2 {
@@ -582,4 +597,521 @@ footer p {
     border-radius: 0;
     padding: 0;
     box-shadow: none;
+} 
+
+.tooltip-prereq {
+    position: fixed;
+    background: rgba(34,34,34,0.75);
+    color: #fff;
+    padding: 8px 16px;
+    border-radius: 7px;
+    font-size: 1em;
+    font-weight: 400;
+    box-shadow: 0 2px 8px #0003;
+    pointer-events: none;
+    opacity: 0;
+    transform: translate(-50%, -8px) scale(0.98);
+    transition: opacity 0.18s, transform 0.18s;
+    z-index: 20000;
+    white-space: pre-line;
+}
+.tooltip-prereq.show {
+    opacity: 1;
+    transform: translate(-50%, -16px) scale(1);
+} 
+
+.course.unchecking {
+    animation: uncheckCourse 0.32s cubic-bezier(.4,1.6,.4,1);
+}
+@keyframes uncheckCourse {
+    0% { transform: scale(1); opacity: 1; }
+    30% { transform: scale(0.95) rotate(-2deg); opacity: 0.7; }
+    60% { transform: scale(1.05) rotate(2deg); opacity: 0.8; }
+    100% { transform: scale(1); opacity: 1; }
+} 
+
+.course.unlocked {
+    animation: unlockCourse 0.38s cubic-bezier(.4,1.6,.4,1);
+}
+@keyframes unlockCourse {
+    0% { box-shadow: 0 0 0 #00e67600; background: inherit; }
+    40% { box-shadow: 0 0 16px #00e67688; background: #e8f5e9; }
+    100% { box-shadow: 0 0 0 #00e67600; background: inherit; }
+}
+.course.locked {
+    animation: lockCourse 0.38s cubic-bezier(.4,1.6,.4,1);
+}
+@keyframes lockCourse {
+    0% { box-shadow: 0 0 0 #d32f2f00; background: inherit; }
+    40% { box-shadow: 0 0 16px #d32f2f88; background: #ffebee; }
+    100% { box-shadow: 0 0 0 #d32f2f00; background: inherit; }
+} 
+
+.course.prereq-shake {
+    animation: prereqShake 0.38s cubic-bezier(.36,1.6,.4,1);
+}
+@keyframes prereqShake {
+    0% { transform: translateX(0); }
+    20% { transform: translateX(-7px); }
+    40% { transform: translateX(7px); }
+    60% { transform: translateX(-5px); }
+    80% { transform: translateX(5px); }
+    100% { transform: translateX(0); }
+} 
+
+#horarioSection {
+    margin: 40px auto 30px auto;
+    max-width: 700px;
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 2px 12px #0001;
+    padding: 28px 24px 20px 24px;
+}
+#horarioSection h2 {
+    text-align: center;
+    margin-bottom: 18px;
+    font-size: 1.5em;
+    color: #d81b60;
+}
+.horario-form {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 18px;
+}
+.horario-form select, .horario-form input[type="time"] {
+    padding: 5px 10px;
+    border-radius: 5px;
+    border: 1px solid #bbb;
+    font-size: 1em;
+}
+.horario-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+}
+.horario-table th, .horario-table td {
+    border: 1px solid #eee;
+    padding: 7px 10px;
+    text-align: center;
+}
+.horario-table th {
+    background: #f8bbd0;
+    color: #333;
+}
+.horario-table td {
+    background: #fce4ec;
+}
+.horario-remove-btn {
+    background: #d32f2f;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    padding: 3px 10px;
+    cursor: pointer;
+    font-size: 0.95em;
+    transition: background 0.2s;
+}
+.horario-remove-btn:hover {
+    background: #b71c1c;
+} 
+
+#horarioVisualSection {
+    margin: 40px auto 30px auto;
+    max-width: 1100px;
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 2px 12px #0001;
+    padding: 28px 24px 20px 24px;
+}
+#horarioVisualSection h2 {
+    text-align: center;
+    margin-bottom: 18px;
+    font-size: 1.5em;
+    color: #1976d2;
+}
+.horario-visual-container {
+    display: flex;
+    gap: 24px;
+}
+.horario-materias-lista {
+    min-width: 180px;
+    max-width: 220px;
+    background: #f8bbd0;
+    border-radius: 8px;
+    padding: 12px 10px;
+    height: fit-content;
+}
+.horario-materias-lista h3 {
+    font-size: 1.1em;
+    margin-bottom: 10px;
+    color: #d81b60;
+    text-align: center;
+}
+.materia-draggable {
+    background: #fff;
+    border: 2px solid #d81b60;
+    border-radius: 6px;
+    padding: 7px 10px;
+    margin-bottom: 8px;
+    font-size: 1em;
+    color: #d81b60;
+    font-weight: 500;
+    cursor: grab;
+    box-shadow: 0 2px 8px #0001;
+    transition: box-shadow 0.2s, background 0.2s;
+}
+.materia-draggable:active {
+    background: #fce4ec;
+    box-shadow: 0 4px 16px #d81b6022;
+}
+.horario-visual-grid {
+    flex: 1;
+    overflow-x: auto;
+}
+.horario-visual-table {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+}
+.horario-visual-table th, .horario-visual-table td {
+    border: 1px solid #eee;
+    text-align: center;
+    padding: 0;
+    height: 38px;
+    position: relative;
+}
+.horario-visual-table th {
+    background: #f3e5f5;
+    color: #333;
+    font-size: 1em;
+    font-weight: 600;
+    height: 36px;
+}
+.horario-visual-table .hora-label {
+    background: #f8bbd0;
+    color: #333;
+    font-size: 0.98em;
+    font-weight: 500;
+    width: 70px;
+    min-width: 70px;
+    border-right: 2px solid #fff;
+}
+.hora-super {
+    background: #f8bbd0;
+    color: #d81b60;
+    font-size: 1.08em;
+    font-weight: 600;
+    text-align: center;
+}
+.bloque-horario {
+    background: #fff;
+    min-width: 120px;
+    height: 38px;
+    transition: background 0.18s, box-shadow 0.18s;
+}
+.bloque-horario.drop-hover {
+    background: #e1f5fe;
+    box-shadow: 0 0 0 2px #1976d2;
+}
+.bloque-horario .materia-asignada {
+    background: #d81b60;
+    color: #fff;
+    border-radius: 5px;
+    padding: 3px 7px;
+    font-size: 0.98em;
+    font-weight: 500;
+    cursor: pointer;
+    display: inline-block;
+    margin: 2px 0;
+    box-shadow: 0 1px 4px #0002;
+    transition: background 0.2s;
+    max-width: 100%;
+    white-space: normal;
+    word-break: break-word;
+    text-align: center;
+}
+.bloque-horario .materia-asignada:hover {
+    background: #ad1457;
+}
+.bloque-horario.ventana {
+    background: #f3e5f5;
+    pointer-events: none;
+} 
+
+#selectorSemestreVisualContainer {
+    max-width: 600px;
+    margin: 0;
+    padding: 0;
+    flex: 1;
+}
+#selectorSemestreVisualContainer label {
+    color: #d81b60;
+}
+#selectorSemestreVisualContainer select {
+    font-size: 1em;
+    padding: 4px 10px;
+    border-radius: 5px;
+    border: 1px solid #bbb;
+} 
+
+#toggleHorarioBtn {
+    background: #1976d2;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: 6px 14px;
+    font-size: 14px;
+    cursor: pointer;
+    margin-left: 10px;
+    transition: background 0.2s;
+}
+#toggleHorarioBtn:hover {
+    background: #0d47a1;
+}
+#selectorSemestreVisualContainer,
+#horarioVisualSection {
+    display: none;
+}
+#selectorSemestreVisualContainer.active,
+#horarioVisualSection.active {
+    display: block;
+} 
+
+.profile-section button,
+#descargarHorarioJpgBtn,
+#editarHorarioBtn,
+.close-horario-modal {
+    background: #f06292;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    padding: 14px 28px;
+    font-size: 1.15em;
+    font-weight: 600;
+    cursor: pointer;
+    margin-left: 14px;
+    box-shadow: 0 2px 8px #0001;
+    transition: background 0.18s, box-shadow 0.18s, transform 0.13s;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+.profile-section button#downloadNotasBtn {
+    background: #f48fb1;
+}
+.profile-section button#downloadNotasBtn:hover {
+    background: #ec407a;
+}
+.profile-section button#toggleHorarioBtn {
+    background: #f06292;
+}
+.profile-section button#toggleHorarioBtn:hover {
+    background: #ec407a;
+}
+#descargarHorarioJpgBtn {
+    background: #f06292;
+    margin: 0 10px 0 0;
+}
+#descargarHorarioJpgBtn:hover {
+    background: #ec407a;
+}
+#editarHorarioBtn {
+    background: #f06292 !important;
+    color: #fff !important;
+    padding: 10px 22px;
+    font-size: 1.08em;
+    margin: 0;
+}
+#editarHorarioBtn:hover {
+    background: #ec407a !important;
+    color: #fff !important;
+}
+.close-horario-modal {
+    background: #f06292 !important;
+    color: #fff !important;
+    border-radius: 50%;
+    width: 38px;
+    height: 38px;
+    font-size: 2em;
+    font-weight: bold;
+    cursor: pointer;
+    z-index: 10;
+    transition: background 0.18s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    top: 18px;
+    right: 18px;
+    padding: 0;
+}
+.close-horario-modal:hover {
+    background: #ec407a !important;
+}
+.profile-section svg {
+    margin-right: 10px;
+    display: inline-block;
+    vertical-align: middle;
+    width: 26px;
+    height: 26px;
+} 
+
+.modal-horario {
+    display: none;
+    position: fixed;
+    z-index: 30000;
+    left: 0;
+    top: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(34,34,34,0.45);
+    align-items: center;
+    justify-content: center;
+    overflow-y: auto;
+}
+.modal-horario.active {
+    display: flex;
+}
+.modal-horario-content {
+    background: #fff;
+    border-radius: 16px;
+    box-shadow: 0 6px 32px #0003;
+    padding: 32px 18px 24px 18px;
+    max-width: 1200px;
+    width: 98vw;
+    max-height: 92vh;
+    overflow-y: auto;
+    position: relative;
+    animation: modalPop 0.25s cubic-bezier(.4,1.6,.4,1);
+}
+@keyframes modalPop {
+    0% { transform: scale(0.92); opacity: 0; }
+    100% { transform: scale(1); opacity: 1; }
+}
+.close-horario-modal {
+    position: absolute;
+    top: 18px;
+    right: 18px;
+    background: #d32f2f;
+    color: #fff;
+    border: none;
+    border-radius: 50%;
+    width: 38px;
+    height: 38px;
+    font-size: 2em;
+    font-weight: bold;
+    cursor: pointer;
+    z-index: 10;
+    transition: background 0.18s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.close-horario-modal:hover {
+    background: #b71c1c;
+} 
+
+#editarHorarioBtn {
+    background: #ffd54f;
+    color: #d81b60;
+    border: none;
+    border-radius: 7px;
+    padding: 10px 22px;
+    font-size: 1.08em;
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow: 0 2px 8px #0001;
+    transition: background 0.18s, box-shadow 0.18s, transform 0.13s;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin: 0;
+}
+#editarHorarioBtn:hover {
+    background: #ffe082;
+    color: #ad1457;
+    transform: scale(1.04);
+}
+#descargarHorarioJpgBtn {
+    background: #f06292;
+    color: #fff;
+    border: none;
+    border-radius: 7px;
+    padding: 10px 22px;
+    font-size: 1.08em;
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow: 0 2px 8px #0001;
+    transition: background 0.18s, box-shadow 0.18s, transform 0.13s;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin: 0 10px 0 0;
+}
+#descargarHorarioJpgBtn:hover {
+    background: #d81b60;
+    transform: scale(1.04);
+}
+.horario-visual-container.no-edit .materia-draggable,
+.horario-visual-container.no-edit .materia-asignada {
+    opacity: 0.6;
+    cursor: not-allowed !important;
+    pointer-events: none;
+} 
+
+.horario-modal-header {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 10px;
+    margin-bottom: 10px;
+    padding: 0 8px;
+    position: relative;
+}
+#selectorSemestreVisualContainer {
+    flex: 1;
+    margin: 0 10px 0 0;
+    padding: 0;
+}
+.horario-modal-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+#editarHorarioBtn, #descargarHorarioJpgBtn {
+    margin: 0 !important;
+    order: unset;
+}
+.close-horario-modal {
+    position: static;
+    margin: 0;
+    width: 38px;
+    height: 38px;
+}
+.horario-titulo-rosa {
+    color: #d81b60 !important;
+    text-align: center;
+    margin-bottom: 18px;
+    font-size: 1.5em;
+} 
+
+.bloque-horario:not(.ventana):hover {
+    box-shadow: 0 4px 18px #d81b6040;
+    transform: scale(1.04);
+    z-index: 2;
+    transition: box-shadow 0.22s, transform 0.18s;
+}
+.materia-draggable:hover, .materia-asignada:hover {
+    box-shadow: 0 4px 18px #d81b6040;
+    transform: scale(1.07);
+    z-index: 3;
+    transition: box-shadow 0.22s, transform 0.18s;
+}
+.horario-visual-table th:hover {
+    background: #f06292;
+    color: #fff;
+    transition: background 0.18s, color 0.18s;
 } 
