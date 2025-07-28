@@ -790,24 +790,7 @@ footer p {
         background: rgba(216, 27, 96, 0.05) !important;
     }
     
-    .drag-indicator {
-        animation: pulse 1.5s infinite;
-    }
-    
-    @keyframes pulse {
-        0% {
-            transform: scale(1);
-            opacity: 0.8;
-        }
-        50% {
-            transform: scale(1.2);
-            opacity: 1;
-        }
-        100% {
-            transform: scale(1);
-            opacity: 0.8;
-        }
-    }
+
 }
 
 /* Prevenir zoom en inputs y elementos interactivos en móviles */
@@ -981,24 +964,46 @@ footer p {
 
 .tooltip-prereq {
     position: fixed;
-    background: rgba(34,34,34,0.75);
+    background: rgba(34,34,34,0.9);
     color: #fff;
-    padding: 8px 16px;
-    border-radius: 7px;
-    font-size: 1em;
+    padding: 8px 12px;
+    border-radius: 6px;
+    font-size: 0.85em;
     font-weight: 400;
-    box-shadow: 0 2px 8px #0003;
+    z-index: 1000;
     pointer-events: none;
+    transform: translateX(-50%);
     opacity: 0;
-    transform: translate(-50%, -8px) scale(0.98);
-    transition: opacity 0.18s, transform 0.18s;
-    z-index: 20000;
-    white-space: pre-line;
+    transition: opacity 0.2s;
+    white-space: nowrap;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.3);
 }
+
 .tooltip-prereq.show {
     opacity: 1;
-    transform: translate(-50%, -16px) scale(1);
-} 
+}
+
+.tooltip-nota {
+    position: fixed;
+    background: linear-gradient(135deg, #d81b60, #f06292);
+    color: #fff;
+    padding: 8px 12px;
+    border-radius: 8px;
+    font-size: 0.9em;
+    font-weight: 600;
+    z-index: 1000;
+    pointer-events: none;
+    transform: translateX(-50%);
+    opacity: 0;
+    transition: opacity 0.2s;
+    white-space: nowrap;
+    box-shadow: 0 4px 12px rgba(216, 27, 96, 0.4);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.tooltip-nota.show {
+    opacity: 1;
+}
 
 .course.unchecking {
     animation: uncheckCourse 0.32s cubic-bezier(.4,1.6,.4,1);

@@ -349,9 +349,30 @@ function createCourseElement(courseData) {
             }
         });
     }
-    // Si está completado, mostrar input de nota
+    // Si está completado, mostrar input de nota y tooltip de nota
     if (completedCourses.has(courseData.id)) {
         showGradeInput(courseElement, courseData);
+        
+        // Tooltip de nota para materias aprobadas
+        courseElement.addEventListener('mouseenter', function(e) {
+            if (courseGrades[courseData.id] !== undefined) {
+                let tooltip = document.createElement('div');
+                tooltip.className = 'tooltip-nota';
+                tooltip.textContent = `Nota: ${courseGrades[courseData.id]}`;
+                document.body.appendChild(tooltip);
+                const rect = courseElement.getBoundingClientRect();
+                tooltip.style.left = (rect.left + rect.width/2) + 'px';
+                tooltip.style.top = (rect.top - 8) + 'px';
+                setTimeout(() => { tooltip.classList.add('show'); }, 10);
+                courseElement._notaTooltip = tooltip;
+            }
+        });
+        courseElement.addEventListener('mouseleave', function() {
+            if (courseElement._notaTooltip) {
+                courseElement._notaTooltip.remove();
+                courseElement._notaTooltip = null;
+            }
+        });
     }
     return courseElement;
 }
@@ -623,31 +644,13 @@ function renderHorarioVisualSection() {
                         el._ghost = ghost;
                         el._draggedMateriaId = el.dataset.materiaId;
                         
-                        // Agregar indicador de arrastre
-                        const dragIndicator = document.createElement('div');
-                        dragIndicator.className = 'drag-indicator';
-                        dragIndicator.style.position = 'fixed';
-                        dragIndicator.style.top = touchY + 15 + 'px';
-                        dragIndicator.style.left = touchX - 10 + 'px';
-                        dragIndicator.style.width = '20px';
-                        dragIndicator.style.height = '20px';
-                        dragIndicator.style.background = 'rgba(216, 27, 96, 0.8)';
-                        dragIndicator.style.borderRadius = '50%';
-                        dragIndicator.style.zIndex = '49999';
-                        dragIndicator.style.pointerEvents = 'none';
-                        dragIndicator.style.boxShadow = '0 2px 8px rgba(216, 27, 96, 0.3)';
-                        document.body.appendChild(dragIndicator);
-                        el._dragIndicator = dragIndicator;
+
                     }
                 } else {
                     e.preventDefault();
                     if (el._ghost) {
                         el._ghost.style.top = e.touches[0].clientY - 30 + 'px';
                         el._ghost.style.left = e.touches[0].clientX - 30 + 'px';
-                    }
-                    if (el._dragIndicator) {
-                        el._dragIndicator.style.top = e.touches[0].clientY + 20 + 'px';
-                        el._dragIndicator.style.left = e.touches[0].clientX - 10 + 'px';
                     }
                     
                     // Resaltar bloques cercanos
@@ -657,11 +660,9 @@ function renderHorarioVisualSection() {
                     
                     bloques.forEach(bloque => {
                         const rect = bloque.getBoundingClientRect();
-                        const centerX = rect.left + rect.width / 2;
-                        const centerY = rect.top + rect.height / 2;
-                        const distance = Math.sqrt((touchX - centerX) ** 2 + (touchY - centerY) ** 2);
                         
-                        if (distance < 80) {
+                        // Solo marcar si el dedo está directamente sobre el bloque
+                        if (touchX >= rect.left && touchX <= rect.right && touchY >= rect.top && touchY <= rect.bottom) {
                             bloque.classList.add('drag-hover');
                             bloque.style.transform = 'scale(1.05)';
                             bloque.style.boxShadow = '0 4px 15px rgba(216, 27, 96, 0.3)';
@@ -737,10 +738,6 @@ function renderHorarioVisualSection() {
                     if (el._ghost) {
                         document.body.removeChild(el._ghost);
                         el._ghost = null;
-                    }
-                    if (el._dragIndicator) {
-                        document.body.removeChild(el._dragIndicator);
-                        el._dragIndicator = null;
                     }
                     el._draggedMateriaId = null;
                 }

@@ -42,7 +42,7 @@ const mallaData = {
                 { id: 'FOR401', name: 'Formulación y Evaluación de Proyectos', prerequisites: ['ADM301'] },
                 { id: 'INV401', name: 'Módulo de Investigación en Medicina Veterinaria I', prerequisites: [] },
                 { id: 'ING401', name: 'Inglés IV', prerequisites: ['ING301'] },
-                { id: 'RSU401', name: 'Responsabilidad Social Universitaria', prerequisites: ['ETI301'] },
+                { id: 'RSU401', name: 'Responsabilidad Social Universitaria', prerequisites: [] },
                 { id: 'PRA401', name: 'Práctica Integrada I en Medicina Veterinaria', prerequisites: ['MOR201'] }
             ]
         },
@@ -83,9 +83,9 @@ const mallaData = {
             number: 8,
             courses: [
                 { id: 'HEM801', name: 'Hematología y Bioquímica Clínica', prerequisites: ['SEM601'] },
-                { id: 'MED801', name: 'Medicina Interna de Animales Mayores', prerequisites: ['IMA701'] },
+                { id: 'MED801', name: 'Medicina Interna de Animales Mayores', prerequisites: ['SEM601','IMA701'] },
                 { id: 'INS801', name: 'Inspección Veterinaria de Alimentos', prerequisites: ['INO701'] },
-                { id: 'PRO801', name: 'Producción y Patología Aviar', prerequisites: ['PAT501'] },
+                { id: 'PRO801', name: 'Producción y Patología Aviar', prerequisites: ['PAT501','BAS601'] },
                 { id: 'LEG801', name: 'Legislación y Evaluación de Impacto Ambiental', prerequisites: ['MAN701'] },
                 { id: 'INV801', name: 'Módulo de Investigación en Medicina Veterinaria II', prerequisites: ['INV401'] },
                 { id: 'PRA801', name: 'Práctica Integrada V en Medicina', prerequisites: ['PRA701'] }
@@ -97,7 +97,7 @@ const mallaData = {
                 { id: 'CIR901', name: 'Cirugía Veterinaria', prerequisites: ['FAR601','MED801'] },
                 { id: 'MED901', name: 'Medicina Interna de Animales Menores', prerequisites: ['MED801'] },
                 { id: 'INT901', name: 'Internado de Salud Pública', prerequisites: ['INS801'] },
-                { id: 'ACU901', name: 'Acuicultura y Patología de Peces', prerequisites: ['LEG801'] },
+                { id: 'ACU901', name: 'Acuicultura y Patología de Peces', prerequisites: ['PAT501'] },
                 { id: 'INT902', name: 'Internado y Conservación de Biodiversidad', prerequisites: ['LEG801'] },
                 { id: 'TIT901', name: 'Trabajo de Titulación I', prerequisites: [] },
                 { id: 'ELE901', name: 'Electivo de Formación General I', prerequisites: [] }
@@ -107,10 +107,10 @@ const mallaData = {
             number: 10,
             courses: [
                 { id: 'INT1001', name: 'Internado Quirúrgico', prerequisites: ['CIR901'] },
-                { id: 'INT1002', name: 'Internado Medicina Interna', prerequisites: ['MED801'] },
+                { id: 'INT1002', name: 'Internado Medicina Interna', prerequisites: ['MED901'] },
                 { id: 'ELE1001', name: 'Electivo de Profundización', prerequisites: [] },
-                { id: 'INT1003', name: 'Internado Producción Animal', prerequisites: ['PRO701','PRO801','ACU901'] },
-                { id: 'TIT1001', name: 'Trabajo de Titulación II', prerequisites: ['TIT901'] },
+                { id: 'INT1003', name: 'Internado Producción Animal', prerequisites: ['ACU901'] },
+                { id: 'TIT1001', name: 'Trabajo de Titulación II', prerequisites: [] },
                 { id: 'ELE1002', name: 'Electivo de Formación General II', prerequisites: [] }
             ]
         }
