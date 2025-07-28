@@ -360,26 +360,52 @@ function createCourseElement(courseData) {
 function createMalla() {
     const container = document.getElementById('mallaContainer');
     
-    mallaData.semesters.forEach(semesterData => {
-        const semesterElement = document.createElement('div');
-        semesterElement.className = 'semester';
+    // Crear contenedores para cada año
+    for (let yearIndex = 0; yearIndex < Math.ceil(mallaData.semesters.length / 2); yearIndex++) {
+        const yearContainer = document.createElement('div');
+        yearContainer.className = 'year-container';
         
-        const titleElement = document.createElement('h2');
-        titleElement.className = 'semester-title';
-        titleElement.textContent = `${semesterData.number}° Semestre`;
+        // Título del año
+        const yearNumber = yearIndex + 1;
+        const yearTitle = document.createElement('div');
+        yearTitle.className = 'year-title';
+        yearTitle.textContent = `${yearNumber}° Año`;
+        yearContainer.appendChild(yearTitle);
         
-        const coursesGrid = document.createElement('div');
-        coursesGrid.className = 'courses-grid';
+        // Contenedor para los semestres del año
+        const semestersContainer = document.createElement('div');
+        semestersContainer.className = 'semesters-container';
         
-        semesterData.courses.forEach(courseData => {
-            const courseElement = createCourseElement(courseData);
-            coursesGrid.appendChild(courseElement);
-        });
+        // Agregar los dos semestres del año
+        for (let i = 0; i < 2; i++) {
+            const semesterIndex = yearIndex * 2 + i;
+            if (semesterIndex < mallaData.semesters.length) {
+                const semesterData = mallaData.semesters[semesterIndex];
+                
+                const semesterElement = document.createElement('div');
+                semesterElement.className = 'semester';
+                
+                const titleElement = document.createElement('h2');
+                titleElement.className = 'semester-title';
+                titleElement.textContent = `${semesterData.number}° Semestre`;
+                
+                const coursesGrid = document.createElement('div');
+                coursesGrid.className = 'courses-grid';
+                
+                semesterData.courses.forEach(courseData => {
+                    const courseElement = createCourseElement(courseData);
+                    coursesGrid.appendChild(courseElement);
+                });
+                
+                semesterElement.appendChild(titleElement);
+                semesterElement.appendChild(coursesGrid);
+                semestersContainer.appendChild(semesterElement);
+            }
+        }
         
-        semesterElement.appendChild(titleElement);
-        semesterElement.appendChild(coursesGrid);
-        container.appendChild(semesterElement);
-    });
+        yearContainer.appendChild(semestersContainer);
+        container.appendChild(yearContainer);
+    }
 }
 
 // --- HORARIO ---
@@ -522,7 +548,7 @@ function renderHorarioVisualSection() {
         if (!bloque.ventana) {
             tbody += `<td class="hora-label">${bloque.inicio}<br>-<br>${bloque.fin}</td>`;
         } else {
-            tbody += `<td class="hora-label" style="background:#f3e5f5;color:#ad1457;font-size:0.95em;">Ventana<br>${bloque.inicio}-${bloque.fin}</td>`;
+            tbody += `<td class="hora-label" style="background:#f3e5f5;color:#ad1457;font-size:0.95em;">${bloque.inicio}-${bloque.fin}</td>`;
         }
         for (let d = 0; d < DIAS_VISUAL.length; d++) {
             if (bloque.ventana) {
@@ -551,7 +577,177 @@ function renderHorarioVisualSection() {
             el.addEventListener('dragstart', e => {
                 e.dataTransfer.setData('text/plain', el.dataset.materiaId);
             });
+            
+            // Soporte para touch en móviles
+            let touchStartX, touchStartY, isDragging = false;
+            
+            el.addEventListener('touchstart', e => {
+                touchStartX = e.touches[0].clientX;
+                touchStartY = e.touches[0].clientY;
+                isDragging = false;
+            });
+            
+            el.addEventListener('touchmove', e => {
+                if (!isDragging) {
+                    const touchX = e.touches[0].clientX;
+                    const touchY = e.touches[0].clientY;
+                    const deltaX = Math.abs(touchX - touchStartX);
+                    const deltaY = Math.abs(touchY - touchStartY);
+                    
+                    if (deltaX > 10 || deltaY > 10) {
+                        isDragging = true;
+                        e.preventDefault();
+                        // Crear un elemento fantasma muy visible para el drag visual
+                        const ghost = document.createElement('div');
+                        ghost.textContent = el.textContent;
+                        ghost.style.position = 'fixed';
+                        ghost.style.top = touchY - 30 + 'px';
+                        ghost.style.left = touchX - 30 + 'px';
+                        ghost.style.zIndex = '50000';
+                        ghost.style.opacity = '1';
+                        ghost.style.pointerEvents = 'none';
+                        ghost.style.transform = 'scale(1.2)';
+                        ghost.style.boxShadow = '0 10px 30px rgba(216, 27, 96, 0.6)';
+                        ghost.style.border = '3px solid #d81b60';
+                        ghost.style.borderRadius = '10px';
+                        ghost.style.background = '#d81b60';
+                        ghost.style.color = 'white';
+                        ghost.style.padding = '8px 12px';
+                        ghost.style.fontSize = '14px';
+                        ghost.style.fontWeight = 'bold';
+                        ghost.style.minWidth = '100px';
+                        ghost.style.textAlign = 'center';
+                        ghost.style.whiteSpace = 'nowrap';
+                        ghost.style.transition = 'none';
+                        document.body.appendChild(ghost);
+                        el._ghost = ghost;
+                        el._draggedMateriaId = el.dataset.materiaId;
+                        
+                        // Agregar indicador de arrastre
+                        const dragIndicator = document.createElement('div');
+                        dragIndicator.className = 'drag-indicator';
+                        dragIndicator.style.position = 'fixed';
+                        dragIndicator.style.top = touchY + 15 + 'px';
+                        dragIndicator.style.left = touchX - 10 + 'px';
+                        dragIndicator.style.width = '20px';
+                        dragIndicator.style.height = '20px';
+                        dragIndicator.style.background = 'rgba(216, 27, 96, 0.8)';
+                        dragIndicator.style.borderRadius = '50%';
+                        dragIndicator.style.zIndex = '49999';
+                        dragIndicator.style.pointerEvents = 'none';
+                        dragIndicator.style.boxShadow = '0 2px 8px rgba(216, 27, 96, 0.3)';
+                        document.body.appendChild(dragIndicator);
+                        el._dragIndicator = dragIndicator;
+                    }
+                } else {
+                    e.preventDefault();
+                    if (el._ghost) {
+                        el._ghost.style.top = e.touches[0].clientY - 30 + 'px';
+                        el._ghost.style.left = e.touches[0].clientX - 30 + 'px';
+                    }
+                    if (el._dragIndicator) {
+                        el._dragIndicator.style.top = e.touches[0].clientY + 20 + 'px';
+                        el._dragIndicator.style.left = e.touches[0].clientX - 10 + 'px';
+                    }
+                    
+                    // Resaltar bloques cercanos
+                    const touchX = e.touches[0].clientX;
+                    const touchY = e.touches[0].clientY;
+                    const bloques = section.querySelectorAll('.bloque-horario:not(.ventana)');
+                    
+                    bloques.forEach(bloque => {
+                        const rect = bloque.getBoundingClientRect();
+                        const centerX = rect.left + rect.width / 2;
+                        const centerY = rect.top + rect.height / 2;
+                        const distance = Math.sqrt((touchX - centerX) ** 2 + (touchY - centerY) ** 2);
+                        
+                        if (distance < 80) {
+                            bloque.classList.add('drag-hover');
+                            bloque.style.transform = 'scale(1.05)';
+                            bloque.style.boxShadow = '0 4px 15px rgba(216, 27, 96, 0.3)';
+                            bloque.style.border = '2px solid rgba(216, 27, 96, 0.5)';
+                        } else {
+                            bloque.classList.remove('drag-hover');
+                            bloque.style.transform = '';
+                            bloque.style.boxShadow = '';
+                            bloque.style.border = '';
+                        }
+                    });
+                }
+            });
+            
+            el.addEventListener('touchend', e => {
+                if (isDragging && el._ghost) {
+                    const touchX = e.changedTouches[0].clientX;
+                    const touchY = e.changedTouches[0].clientY;
+                    
+                    // Limpiar efectos visuales de todos los bloques
+                    const bloques = section.querySelectorAll('.bloque-horario');
+                    bloques.forEach(bloque => {
+                        bloque.classList.remove('drag-hover');
+                        bloque.style.transform = '';
+                        bloque.style.boxShadow = '';
+                        bloque.style.border = '';
+                    });
+                    
+                    // Buscar el bloque más cercano
+                    const bloquesDisponibles = section.querySelectorAll('.bloque-horario:not(.ventana)');
+                    let closestBloque = null;
+                    let minDistance = Infinity;
+                    
+                    bloquesDisponibles.forEach(bloque => {
+                        const rect = bloque.getBoundingClientRect();
+                        const centerX = rect.left + rect.width / 2;
+                        const centerY = rect.top + rect.height / 2;
+                        const distance = Math.sqrt((touchX - centerX) ** 2 + (touchY - centerY) ** 2);
+                        
+                        if (distance < minDistance && distance < 100) {
+                            minDistance = distance;
+                            closestBloque = bloque;
+                        }
+                    });
+                    
+                    if (closestBloque) {
+                        const materiaId = el._draggedMateriaId;
+                        if (!materiasNoAprobadas.some(m => m.id === materiaId)) return;
+                        
+                        // No permitir solapamiento
+                        if (horarioData.bloques.some(h => h.materia === materiaId && h.dia === closestBloque.dataset.dia && (
+                            (closestBloque.dataset.inicio >= h.inicio && closestBloque.dataset.inicio < h.fin) || 
+                            (closestBloque.dataset.fin > h.inicio && closestBloque.dataset.fin <= h.fin) || 
+                            (closestBloque.dataset.inicio <= h.inicio && closestBloque.dataset.fin >= h.fin)
+                        ))) {
+                            showToast('Ese horario se traslapa con otro de la misma materia');
+                        } else {
+                            // Si ya hay materia en ese bloque, reemplazar
+                            const idx = horarioData.bloques.findIndex(h => h.dia === closestBloque.dataset.dia && h.inicio === closestBloque.dataset.inicio && h.fin === closestBloque.dataset.fin);
+                            if (idx !== -1) horarioData.bloques.splice(idx, 1);
+                            horarioData.bloques.push({ 
+                                materia: materiaId, 
+                                dia: closestBloque.dataset.dia, 
+                                inicio: closestBloque.dataset.inicio, 
+                                fin: closestBloque.dataset.fin 
+                            });
+                            saveHorarioVisualData(horarioDataAll);
+                            renderHorarioVisualSection();
+                        }
+                    }
+                    
+                    // Limpiar elementos visuales
+                    if (el._ghost) {
+                        document.body.removeChild(el._ghost);
+                        el._ghost = null;
+                    }
+                    if (el._dragIndicator) {
+                        document.body.removeChild(el._dragIndicator);
+                        el._dragIndicator = null;
+                    }
+                    el._draggedMateriaId = null;
+                }
+                isDragging = false;
+            });
         });
+        
         // Arrastrar materia ya asignada
         section.querySelectorAll('.materia-asignada').forEach(el => {
             el.addEventListener('dragstart', e => {
@@ -559,6 +755,88 @@ function renderHorarioVisualSection() {
                 // Guardar referencia al bloque original
                 el._draggedFrom = el.closest('.bloque-horario');
             });
+            
+            // Soporte para touch en materias asignadas
+            let touchStartX, touchStartY, isDragging = false;
+            
+            el.addEventListener('touchstart', e => {
+                touchStartX = e.touches[0].clientX;
+                touchStartY = e.touches[0].clientY;
+                isDragging = false;
+                el._draggedFrom = el.closest('.bloque-horario');
+            });
+            
+            el.addEventListener('touchmove', e => {
+                if (!isDragging) {
+                    const touchX = e.touches[0].clientX;
+                    const touchY = e.touches[0].clientY;
+                    const deltaX = Math.abs(touchX - touchStartX);
+                    const deltaY = Math.abs(touchY - touchStartY);
+                    
+                    if (deltaX > 10 || deltaY > 10) {
+                        isDragging = true;
+                        e.preventDefault();
+                        // Crear elemento fantasma muy visible
+                        const ghost = document.createElement('div');
+                        ghost.textContent = el.textContent;
+                        ghost.style.position = 'fixed';
+                        ghost.style.top = touchY - 30 + 'px';
+                        ghost.style.left = touchX - 30 + 'px';
+                        ghost.style.zIndex = '50000';
+                        ghost.style.opacity = '1';
+                        ghost.style.pointerEvents = 'none';
+                        ghost.style.transform = 'scale(1.2)';
+                        ghost.style.boxShadow = '0 10px 30px rgba(216, 27, 96, 0.6)';
+                        ghost.style.border = '3px solid #d81b60';
+                        ghost.style.borderRadius = '10px';
+                        ghost.style.background = '#d81b60';
+                        ghost.style.color = 'white';
+                        ghost.style.padding = '8px 12px';
+                        ghost.style.fontSize = '14px';
+                        ghost.style.fontWeight = 'bold';
+                        ghost.style.minWidth = '100px';
+                        ghost.style.textAlign = 'center';
+                        ghost.style.whiteSpace = 'nowrap';
+                        ghost.style.transition = 'none';
+                        document.body.appendChild(ghost);
+                        el._ghost = ghost;
+                    }
+                } else {
+                    e.preventDefault();
+                    if (el._ghost) {
+                        el._ghost.style.top = e.touches[0].clientY - 30 + 'px';
+                        el._ghost.style.left = e.touches[0].clientX - 30 + 'px';
+                    }
+                }
+            });
+            
+            el.addEventListener('touchend', e => {
+                if (isDragging && el._ghost) {
+                    const rect = section.querySelector('.horario-visual-grid').getBoundingClientRect();
+                    const touchX = e.changedTouches[0].clientX;
+                    const touchY = e.changedTouches[0].clientY;
+                    
+                    if (touchX < rect.left || touchX > rect.right || touchY < rect.top || touchY > rect.bottom) {
+                        // Eliminar asignación
+                        const materiaId = el.dataset.materiaId;
+                        const parent = el._draggedFrom;
+                        if (parent) {
+                            const dia = parent.dataset.dia, inicio = parent.dataset.inicio, fin = parent.dataset.fin;
+                            const idx = horarioData.bloques.findIndex(h => h.materia === materiaId && h.dia === dia && h.inicio === inicio && h.fin === fin);
+                            if (idx !== -1) {
+                                horarioData.bloques.splice(idx, 1);
+                                saveHorarioVisualData(horarioDataAll);
+                                renderHorarioVisualSection();
+                            }
+                        }
+                    }
+                    
+                    document.body.removeChild(el._ghost);
+                    el._ghost = null;
+                }
+                isDragging = false;
+            });
+            
             el.addEventListener('dragend', e => {
                 const rect = section.querySelector('.horario-visual-grid').getBoundingClientRect();
                 if (e.clientX < rect.left || e.clientX > rect.right || e.clientY < rect.top || e.clientY > rect.bottom) {
@@ -577,6 +855,7 @@ function renderHorarioVisualSection() {
                 }
             });
         });
+        
         // Drop en bloques
         section.querySelectorAll('.bloque-horario:not(.ventana)').forEach(bloque => {
             bloque.addEventListener('dragover', e => {

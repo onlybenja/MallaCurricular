@@ -105,6 +105,72 @@ h1 {
     align-items: flex-start;
 }
 
+.year-container {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+}
+
+.year-title {
+    background: rgba(216, 27, 96, 0.25);
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    border: none;
+    color: #d81b60;
+    padding: 0.4rem 1.5rem;
+    border-radius: 20px;
+    font-size: 1.2rem;
+    font-weight: 600;
+    text-align: center;
+    box-shadow: 0 2px 15px rgba(216, 27, 96, 0.15);
+    width: calc(2 * var(--semester-width) + 0.5rem);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10;
+    position: relative;
+    overflow: hidden;
+}
+
+.year-title::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(90deg, 
+        transparent 0%, 
+        rgba(216, 27, 96, 0.05) 10%, 
+        rgba(216, 27, 96, 0.1) 20%, 
+        rgba(216, 27, 96, 0.15) 30%, 
+        rgba(216, 27, 96, 0.2) 40%, 
+        rgba(216, 27, 96, 0.2) 60%, 
+        rgba(216, 27, 96, 0.15) 70%, 
+        rgba(216, 27, 96, 0.1) 80%, 
+        rgba(216, 27, 96, 0.05) 90%, 
+        transparent 100%);
+    z-index: -1;
+}
+
+.year-title::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: radial-gradient(ellipse at center, rgba(216, 27, 96, 0.08) 0%, transparent 60%);
+    z-index: -2;
+}
+
+.semesters-container {
+    display: flex;
+    gap: 0.5rem;
+    align-items: flex-start;
+}
+
 .semester {
     width: var(--semester-width);
     border: 1px solid var(--color-border);
@@ -369,6 +435,139 @@ footer p {
     .course-name {
         font-size: 0.9rem;
     }
+    
+    .year-container {
+        margin-bottom: 0.5rem !important;
+    }
+    
+    .year-title {
+        width: 100% !important;
+        font-size: 1.1rem !important;
+        padding: 0.35rem 1rem !important;
+        margin-bottom: 0.5rem !important;
+        backdrop-filter: blur(12px) !important;
+        -webkit-backdrop-filter: blur(12px) !important;
+    }
+    
+    .semesters-container {
+        flex-direction: column !important;
+        gap: 1rem !important;
+    }
+    
+    /* Estilos específicos para el horario en móvil */
+    .modal-horario-content {
+        width: 95vw !important;
+        max-width: 95vw !important;
+        height: 90vh !important;
+        max-height: 90vh !important;
+        margin: 5vh auto !important;
+        padding: 10px !important;
+    }
+    
+    .horario-visual-container {
+        flex-direction: column !important;
+        height: calc(90vh - 120px) !important;
+        gap: 10px !important;
+    }
+    
+    .horario-materias-lista {
+        width: 100% !important;
+        max-height: 30vh !important;
+        overflow-y: auto !important;
+        order: 1 !important;
+    }
+    
+    .horario-visual-grid {
+        width: 100% !important;
+        height: calc(60vh - 50px) !important;
+        overflow: auto !important;
+        order: 2 !important;
+    }
+    
+    .horario-visual-table {
+        min-width: 600px !important;
+        font-size: 0.8rem !important;
+    }
+    
+    .horario-visual-table th, 
+    .horario-visual-table td {
+        height: 30px !important;
+        padding: 2px !important;
+    }
+    
+    .horario-visual-table th {
+        height: 28px !important;
+        font-size: 0.75rem !important;
+    }
+    
+    .horario-visual-table .hora-label {
+        width: 50px !important;
+        min-width: 50px !important;
+        font-size: 0.7rem !important;
+    }
+    
+    .bloque-horario {
+        min-width: 80px !important;
+        height: 30px !important;
+    }
+    
+    .bloque-horario .materia-asignada {
+        font-size: 0.7rem !important;
+        padding: 1px 3px !important;
+        margin: 1px 0 !important;
+    }
+    
+    .materia-draggable {
+        font-size: 0.8rem !important;
+        padding: 5px 8px !important;
+        margin-bottom: 5px !important;
+    }
+    
+    .horario-modal-header {
+        flex-direction: column !important;
+        gap: 8px !important;
+        margin-bottom: 8px !important;
+        padding: 0 5px !important;
+    }
+    
+    .horario-modal-left {
+        width: 100% !important;
+        flex-direction: column !important;
+        gap: 8px !important;
+    }
+    
+    #selectorSemestreVisualContainer {
+        width: 100% !important;
+        max-width: none !important;
+    }
+    
+    .horario-modal-actions {
+        width: 100% !important;
+        justify-content: center !important;
+        gap: 8px !important;
+    }
+    
+    #editarHorarioBtn, 
+    #descargarHorarioJpgBtn {
+        padding: 8px 16px !important;
+        font-size: 0.9rem !important;
+        flex: 1 !important;
+        max-width: 150px !important;
+    }
+    
+    .close-horario-modal {
+        position: absolute !important;
+        top: 10px !important;
+        right: 10px !important;
+        width: 32px !important;
+        height: 32px !important;
+        font-size: 1.5rem !important;
+    }
+    
+    .horario-materias-lista h3 {
+        font-size: 1rem !important;
+        margin-bottom: 8px !important;
+    }
 }
 
 /* Estilos para móviles en modo landscape */
@@ -423,6 +622,118 @@ footer p {
         font-size: 0.7rem;
         margin-top: 0.25rem;
     }
+    
+    .year-container {
+        margin-bottom: 0.5rem !important;
+    }
+    
+    .year-title {
+        font-size: 0.9rem !important;
+        padding: 0.25rem 0.8rem !important;
+        width: calc(2 * var(--semester-width) + 0.25rem) !important;
+        margin-bottom: 0.25rem !important;
+        backdrop-filter: blur(10px) !important;
+        -webkit-backdrop-filter: blur(10px) !important;
+    }
+    
+    .semesters-container {
+        gap: 0.25rem !important;
+    }
+    
+    /* Estilos específicos para el horario en landscape */
+    .modal-horario-content {
+        width: 98vw !important;
+        max-width: 98vw !important;
+        height: 95vh !important;
+        max-height: 95vh !important;
+        margin: 2.5vh auto !important;
+        padding: 8px !important;
+    }
+    
+    .horario-visual-container {
+        height: calc(95vh - 100px) !important;
+        gap: 8px !important;
+    }
+    
+    .horario-materias-lista {
+        max-height: 25vh !important;
+        overflow-y: auto !important;
+    }
+    
+    .horario-visual-grid {
+        height: calc(70vh - 50px) !important;
+        overflow: auto !important;
+    }
+    
+    .horario-visual-table {
+        min-width: 500px !important;
+        font-size: 0.75rem !important;
+    }
+    
+    .horario-visual-table th, 
+    .horario-visual-table td {
+        height: 25px !important;
+        padding: 1px !important;
+    }
+    
+    .horario-visual-table th {
+        height: 24px !important;
+        font-size: 0.7rem !important;
+    }
+    
+    .horario-visual-table .hora-label {
+        width: 45px !important;
+        min-width: 45px !important;
+        font-size: 0.65rem !important;
+    }
+    
+    .bloque-horario {
+        min-width: 70px !important;
+        height: 25px !important;
+    }
+    
+    .bloque-horario .materia-asignada {
+        font-size: 0.65rem !important;
+        padding: 1px 2px !important;
+        margin: 0 !important;
+    }
+    
+    .materia-draggable {
+        font-size: 0.75rem !important;
+        padding: 4px 6px !important;
+        margin-bottom: 4px !important;
+    }
+    
+    .horario-modal-header {
+        gap: 6px !important;
+        margin-bottom: 6px !important;
+        padding: 0 4px !important;
+    }
+    
+    .horario-modal-left {
+        gap: 6px !important;
+    }
+    
+    .horario-modal-actions {
+        gap: 6px !important;
+    }
+    
+    #editarHorarioBtn, 
+    #descargarHorarioJpgBtn {
+        padding: 6px 12px !important;
+        font-size: 0.8rem !important;
+    }
+    
+    .close-horario-modal {
+        width: 28px !important;
+        height: 28px !important;
+        font-size: 1.3rem !important;
+    }
+    
+    .horario-materias-lista h3 {
+        font-size: 0.9rem !important;
+        margin-bottom: 6px !important;
+    }
 }
 
 /* Estilos para scroll */
@@ -443,7 +754,76 @@ footer p {
 
 ::-webkit-scrollbar-thumb:hover {
     background: var(--color-primary-dark);
-} 
+}
+
+/* Mejoras para experiencia táctil en móviles */
+@media (pointer: coarse) {
+    .materia-draggable,
+    .materia-asignada,
+    .bloque-horario {
+        touch-action: manipulation;
+        -webkit-touch-callout: none;
+        -webkit-user-select: none;
+        -khtml-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+    }
+    
+    .materia-draggable:active,
+    .materia-asignada:active {
+        transform: scale(0.95);
+        transition: transform 0.1s;
+    }
+    
+    .bloque-horario.drop-hover {
+        transform: scale(1.05);
+        transition: transform 0.1s;
+    }
+    
+    /* Efectos visuales para arrastre */
+    .bloque-horario.drag-hover {
+        transform: scale(1.05) !important;
+        box-shadow: 0 4px 15px rgba(216, 27, 96, 0.3) !important;
+        border: 2px solid rgba(216, 27, 96, 0.5) !important;
+        transition: all 0.2s ease !important;
+        background: rgba(216, 27, 96, 0.05) !important;
+    }
+    
+    .drag-indicator {
+        animation: pulse 1.5s infinite;
+    }
+    
+    @keyframes pulse {
+        0% {
+            transform: scale(1);
+            opacity: 0.8;
+        }
+        50% {
+            transform: scale(1.2);
+            opacity: 1;
+        }
+        100% {
+            transform: scale(1);
+            opacity: 0.8;
+        }
+    }
+}
+
+/* Prevenir zoom en inputs y elementos interactivos en móviles */
+@media screen and (max-width: 768px) {
+    input, select, textarea, button {
+        font-size: 16px !important;
+    }
+    
+    .modal-horario {
+        touch-action: manipulation;
+    }
+    
+    .modal-horario-content {
+        touch-action: manipulation;
+    }
+}
 
 .modal {
     display: none;
@@ -1065,15 +1445,22 @@ footer p {
 .horario-modal-header {
     display: flex;
     align-items: center;
-    justify-content: flex-start;
+    justify-content: space-between;
     gap: 10px;
     margin-bottom: 10px;
     padding: 0 8px;
     position: relative;
 }
+
+.horario-modal-left {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex: 1;
+}
 #selectorSemestreVisualContainer {
     flex: 1;
-    margin: 0 10px 0 0;
+    margin: 0;
     padding: 0;
 }
 .horario-modal-actions {
@@ -1090,6 +1477,7 @@ footer p {
     margin: 0;
     width: 38px;
     height: 38px;
+    flex-shrink: 0;
 }
 .horario-titulo-rosa {
     color: #d81b60 !important;
